@@ -222,17 +222,19 @@ def get_analytics():
         raise HTTPException(status_code=500, detail=f"Analytics error: {str(e)}")
 
 
-# Serve Frontend UI Static Assets
-FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
-if os.path.exists(FRONTEND_DIR):
-    app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
-
-    @app.get("/")
-    def read_root():
-        index_path = os.path.join(FRONTEND_DIR, "index.html")
-        if os.path.exists(index_path):
-            return FileResponse(index_path)
-        return {"message": "TrustLens API Engine active. Frontend static files missing."}
+@app.get("/")
+def read_root():
+    return {
+        "service": "TrustLens API Engine — Pure REST Backend",
+        "docs": "http://localhost:8000/docs",
+        "endpoints": [
+            "POST /api/predict",
+            "GET /api/presets",
+            "GET /api/history",
+            "POST /api/decisions",
+            "GET /api/analytics"
+        ]
+    }
 
 if __name__ == "__main__":
     import uvicorn
