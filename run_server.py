@@ -13,13 +13,13 @@ if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
 if __name__ == "__main__":
-    print("=" * 60)
-    print("🚀 Launching TrustLens AI Decision Support Server")
-    print("=" * 60)
-    print("• Web Dashboard UI: http://localhost:8000")
-    print("• API Documentation: http://localhost:8000/docs")
-    print("• Prediction Endpoint: POST http://localhost:8000/api/predict")
-    print("=" * 60)
+    print("============================================================")
+    print("Launching TrustLens AI Decision Support Server")
+    print("============================================================")
+    print("- Web Dashboard UI: http://localhost:8000")
+    print("- API Documentation: http://localhost:8000/docs")
+    print("- Prediction Endpoint: POST http://localhost:8000/api/predict")
+    print("============================================================")
     
     uvicorn.run(
         "backend.app.main:app",

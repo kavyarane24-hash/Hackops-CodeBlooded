@@ -13,18 +13,30 @@ import './Explainability.css';
  */
 const Explainability = () => {
   const navigate = useNavigate();
-  
-  const storedEval = sessionStorage.getItem('currentEvaluation');
-  const liveData = storedEval ? JSON.parse(storedEval) : null;
-  const borrower = mockBorrowerData;
 
-  const positiveFactors = borrower.factors.filter(f => f.impact === 'positive');
-  const negativeFactors = borrower.factors.filter(f => f.impact === 'negative');
+  const savedPrediction = React.useMemo(() => {
+    try {
+      const data = sessionStorage.getItem('trustlens_prediction');
+      return data ? JSON.parse(data) : null;
+    } catch (e) {
+      return null;
+    }
+  }, []);
+
+  const borrowerName = savedPrediction?.borrower_name || mockBorrowerData.name;
+
+  const positiveFactors = savedPrediction?.positive_factors 
+    ? savedPrediction.positive_factors.map((pf, idx) => ({ id: `pf-${idx}`, title: pf, impact: 'positive', category: 'Pillar Grounding', points: '+15', description: pf }))
+    : mockBorrowerData.factors.filter(f => f.impact === 'positive');
+
+  const negativeFactors = savedPrediction?.risk_factors
+    ? savedPrediction.risk_factors.map((rf, idx) => ({ id: `rf-${idx}`, title: rf, impact: 'negative', category: 'Risk Indicator', points: '-10', description: rf }))
+    : mockBorrowerData.factors.filter(f => f.impact === 'negative');
 
   return (
     <div className="dashboard-layout">
       {/* Sidebar Navigation */}
-      <Sidebar borrowerName={borrower.name} />
+      <Sidebar borrowerName={borrowerName} />
 
       {/* Main Workspace */}
       <main className="dashboard-main">
@@ -59,21 +71,6 @@ const Explainability = () => {
             </p>
           </div>
         </div>
-
-        {/* Live Generative AI Explanation Banner if Available */}
-        {liveData?.ai_explanation && (
-          <div className="card-base explain-intro-card" style={{ marginTop: '1rem', borderLeft: '4px solid #0284c7', background: 'linear-gradient(to right, #f0f9ff, #ffffff)' }}>
-            <div className="explain-icon-box" style={{ background: '#0284c7', color: '#ffffff' }}>
-              <BrainCircuit size={28} />
-            </div>
-            <div className="explain-intro-text">
-              <h3 style={{ color: '#0369a1' }}>Live Generative AI Decision Summary</h3>
-              <p style={{ fontStyle: 'italic', marginTop: '0.25rem', color: '#1e293b' }}>
-                "{liveData.ai_explanation}"
-              </p>
-            </div>
-          </div>
-        )}
 
         {/* Factors Breakdown Section (Positive vs. Negative Drivers) */}
         <div className="grid-2 factors-section">

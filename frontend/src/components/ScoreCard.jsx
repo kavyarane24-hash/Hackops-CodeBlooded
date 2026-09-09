@@ -10,8 +10,8 @@ const ScoreCard = ({ score = 785, maxScore = 900, rating = "High Trust" }) => {
 
   // Determine meter color grade
   const getMeterColor = () => {
-    if (percentage >= 70) return 'var(--primary-500)';
-    if (percentage >= 45) return '#f59e0b';
+    if (score >= 750) return 'var(--primary-500)';
+    if (score >= 600) return '#f59e0b';
     return '#e11d48';
   };
 

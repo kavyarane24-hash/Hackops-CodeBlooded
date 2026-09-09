@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -17,25 +17,54 @@ import './Dashboard.css';
  */
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [decisionSubmitted, setDecisionSubmitted] = useState(null);
 
-  // Load live evaluation from backend API if available, else fallback to mock data
-  const storedEval = sessionStorage.getItem('currentEvaluation');
-  const liveData = storedEval ? JSON.parse(storedEval) : null;
+  // Check for live prediction from API in sessionStorage
+  const savedPrediction = React.useMemo(() => {
+    try {
+      const data = sessionStorage.getItem('trustlens_prediction');
+      return data ? JSON.parse(data) : null;
+    } catch (e) {
+      return null;
+    }
+  }, []);
 
-  const borrower = {
-    ...mockBorrowerData,
-    name: liveData?.borrower_name || mockBorrowerData.name,
-    trustScore: liveData ? liveData.trust_score : mockBorrowerData.trustScore,
-    maxTrustScore: liveData ? 100 : mockBorrowerData.maxTrustScore,
-    riskLevel: liveData ? (liveData.risk_level === 'LOW' ? 'Low Risk' : liveData.risk_level === 'MEDIUM' ? 'Medium Risk' : 'High Risk') : mockBorrowerData.riskLevel,
-    riskScorePercent: liveData ? Math.round(liveData.default_probability * 100) : mockBorrowerData.riskScorePercent,
-    recommendedMaxLoan: liveData ? liveData.recommended_amount : mockBorrowerData.recommendedMaxLoan,
+  const borrowerName = savedPrediction?.borrower_name || mockBorrowerData.name;
+  const trustScore = savedPrediction?.trust_score ?? mockBorrowerData.trustScore;
+  const riskLevel = savedPrediction?.risk_level ?? mockBorrowerData.riskLevel;
+  const defaultProb = savedPrediction?.default_probability != null 
+    ? Math.round(savedPrediction.default_probability * 100) 
+    : mockBorrowerData.riskScorePercent;
+  const maxLoan = savedPrediction?.recommended_amount ?? mockBorrowerData.recommendedMaxLoan;
+  const aiExplanation = savedPrediction?.ai_explanation || "Borrower exhibits strong cashflow velocity with zero historical defaults.";
+
+  const handleDecision = async (action) => {
+    try {
+      const payload = {
+        borrower_name: borrowerName,
+        decision_action: action,
+        application_id: savedPrediction?.application_id || 1,
+        approved_amount: action === 'DECLINED' ? 0 : maxLoan,
+        lender_notes: `Lender submitted ${action} decision via TrustLens Dashboard UI.`
+      };
+      const res = await fetch('/api/decisions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        setDecisionSubmitted(action);
+      }
+    } catch (err) {
+      console.error('Failed to submit decision:', err);
+      setDecisionSubmitted(action);
+    }
   };
 
   return (
     <div className="dashboard-layout">
       {/* Sidebar Navigation */}
-      <Sidebar borrowerName={borrower.name} />
+      <Sidebar borrowerName={borrowerName} />
 
       {/* Main Dashboard Workspace */}
       <main className="dashboard-main">
@@ -43,7 +72,7 @@ const Dashboard = () => {
         <div className="dash-header">
           <div>
             <div className="dash-breadcrumb">TrustLens / Credit Intelligence Overview</div>
-            <h1 className="dash-title">Risk Profile & Underwriting Summary</h1>
+            <h1 className="dash-title">Risk Profile & Underwriting Summary — {borrowerName}</h1>
           </div>
 
           <div className="dash-actions">
@@ -69,18 +98,18 @@ const Dashboard = () => {
         {/* Top Metric Cards Row */}
         <div className="grid-4 metric-cards-row">
           <ScoreCard
-            score={borrower.trustScore}
-            maxScore={borrower.maxTrustScore}
-            rating="High Trust"
+            score={trustScore}
+            maxScore={100}
+            rating={trustScore >= 80 ? "High Trust" : trustScore >= 60 ? "Moderate Trust" : "Elevated Risk"}
           />
 
           <div className="card-base metric-card">
             <span className="metric-card-subtitle">Risk Classification</span>
             <div className="metric-badge-container">
-              <RiskBadge level={borrower.riskLevel} size="lg" />
+              <RiskBadge level={riskLevel} size="lg" />
             </div>
             <p className="metric-card-subtext">
-              Estimated Default Risk: <strong style={{ color: '#059669' }}>{borrower.riskScorePercent}%</strong>
+              Estimated Default Risk: <strong style={{ color: riskLevel === 'LOW' ? '#059669' : '#dc2626' }}>{defaultProb}%</strong>
             </p>
           </div>
 
@@ -88,17 +117,17 @@ const Dashboard = () => {
             <span className="metric-card-subtitle">Max Recommended Loan</span>
             <div className="metric-amount-row">
               <IndianRupee size={22} className="rupee-icon" />
-              <span className="metric-amount-val">{(borrower.recommendedMaxLoan).toLocaleString('en-IN')}</span>
+              <span className="metric-amount-val">{(maxLoan).toLocaleString('en-IN')}</span>
             </div>
             <p className="metric-card-subtext">
-              Requested: ₹{(borrower.requestedAmount).toLocaleString('en-IN')} (Safe headroom)
+              Recommended Tenure: {savedPrediction?.recommended_tenure || 12} Months
             </p>
           </div>
 
           <div className="card-base metric-card">
             <span className="metric-card-subtitle">Suggested Informal Rate</span>
             <div className="metric-amount-row">
-              <span className="metric-amount-val">{borrower.suggestedInterestRate}%</span>
+              <span className="metric-amount-val">{riskLevel === 'LOW' ? '12.5' : riskLevel === 'MEDIUM' ? '16.0' : '22.0'}%</span>
               <Percent size={20} className="percent-icon" />
             </div>
             <p className="metric-card-subtext">
@@ -120,7 +149,7 @@ const Dashboard = () => {
 
             <div className="chart-container-box">
               <ResponsiveContainer width="100%" height={260}>
-                <AreaChart data={borrower.monthlyCashflow} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                <AreaChart data={mockBorrowerData.monthlyCashflow} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorInflow" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#10b981" stopOpacity={0.4}/>
@@ -153,7 +182,15 @@ const Dashboard = () => {
 
             <div className="chart-container-box">
               <ResponsiveContainer width="100%" height={260}>
-                <RadarChart cx="50%" cy="50%" outerRadius="75%" data={borrower.trustDimensions}>
+                <RadarChart cx="50%" cy="50%" outerRadius="75%" data={
+                  savedPrediction?.score_breakdown ? [
+                    { subject: 'Income Stability', score: savedPrediction.score_breakdown.income_stability * 4, fullMark: 100 },
+                    { subject: 'Credit History', score: savedPrediction.score_breakdown.credit_history * 5, fullMark: 100 },
+                    { subject: 'Affordability', score: savedPrediction.score_breakdown.loan_affordability * 5, fullMark: 100 },
+                    { subject: 'Repayment', score: savedPrediction.score_breakdown.repayment_history * 5, fullMark: 100 },
+                    { subject: 'Employment', score: savedPrediction.score_breakdown.employment_stability * 6.6, fullMark: 100 }
+                  ] : mockBorrowerData.trustDimensions
+                }>
                   <PolarGrid stroke="#e2e8f0" />
                   <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 11 }} />
                   <PolarRadiusAxis angle={30} domain={[0, 100]} />
@@ -164,102 +201,34 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Quick Underwriting Insights Banner & Human Decision Actions */}
-        <div className="card-base decision-banner" style={{ flexDirection: 'column', alignItems: 'stretch', gap: '1rem' }}>
-          <div className="flex items-center justify-between" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div className="decision-info">
-              <div className="decision-badge">
-                <FileCheck size={20} />
-                <span>AI Recommendation: {borrower.riskLevel === 'High Risk' ? 'CAUTION / LOWER AMOUNT' : 'APPROVE LOAN'}</span>
-              </div>
-              <h3>Recommended Allocation: ₹{(borrower.recommendedMaxLoan).toLocaleString('en-IN')} @ {borrower.suggestedInterestRate}% p.a.</h3>
-              <p>{liveData?.ai_explanation || "Borrower exhibits verified cashflow velocity with clean default record."}</p>
+        {/* Quick Underwriting Insights & Human Lender Decision Action Banner */}
+        <div className="card-base decision-banner" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div className="decision-info">
+            <div className="decision-badge">
+              <FileCheck size={20} />
+              <span>AI Recommendation: {riskLevel === 'HIGH' ? 'DECLINE OR REQUIRE COLLATERAL' : 'APPROVE LOAN'}</span>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              icon={ArrowUpRight}
-              onClick={() => navigate('/explainability')}
-            >
-              Review AI Factors
-            </Button>
+            <h3>Recommended Max Loan: ₹{(maxLoan).toLocaleString('en-IN')}</h3>
+            <p style={{ marginTop: '0.5rem', lineHeight: '1.5' }}>{aiExplanation}</p>
           </div>
 
-          {/* Human Lender Decision Buttons */}
-          <div style={{ paddingTop: '1rem', borderTop: '1px solid #e2e8f0', display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#475569', textTransform: 'uppercase', tracking: '0.05em' }}>Human Lender Decision:</span>
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={async () => {
-                try {
-                  await fetch('/api/decisions', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                      borrower_name: borrower.name,
-                      decision_action: 'APPROVED',
-                      approved_amount: borrower.recommendedMaxLoan,
-                      approved_tenure: 12,
-                      lender_notes: 'Approved based on AI Risk Assessment.'
-                    })
-                  });
-                  alert(`Logged decision: APPROVED for ${borrower.name}`);
-                } catch (e) {
-                  alert('Recorded APPROVED decision locally.');
-                }
-              }}
-            >
-              Approve Loan
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={async () => {
-                try {
-                  await fetch('/api/decisions', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                      borrower_name: borrower.name,
-                      decision_action: 'COUNTER_OFFERED',
-                      approved_amount: borrower.recommendedMaxLoan * 0.8,
-                      approved_tenure: 12,
-                      lender_notes: 'Counter offered lower loan amount.'
-                    })
-                  });
-                  alert(`Logged decision: COUNTER OFFERED for ${borrower.name}`);
-                } catch (e) {
-                  alert('Recorded COUNTER OFFER decision locally.');
-                }
-              }}
-            >
-              Counter Offer
-            </Button>
-            <Button
-              variant="danger"
-              size="sm"
-              style={{ backgroundColor: '#ef4444', color: '#fff', border: 'none' }}
-              onClick={async () => {
-                try {
-                  await fetch('/api/decisions', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                      borrower_name: borrower.name,
-                      decision_action: 'DECLINED',
-                      lender_notes: 'Declined due to risk evaluation.'
-                    })
-                  });
-                  alert(`Logged decision: DECLINED for ${borrower.name}`);
-                } catch (e) {
-                  alert('Recorded DECLINED decision locally.');
-                }
-              }}
-            >
-              Decline Loan
-            </Button>
-          </div>
+          {decisionSubmitted ? (
+            <div style={{ padding: '0.75rem 1rem', borderRadius: '8px', background: '#dcfce7', color: '#166534', fontWeight: 'bold' }}>
+              ✓ Decision Recorded: {decisionSubmitted}
+            </div>
+          ) : (
+            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+              <Button variant="primary" size="md" icon={ArrowUpRight} onClick={() => handleDecision('APPROVED')}>
+                Approve Loan
+              </Button>
+              <Button variant="outline" size="md" onClick={() => handleDecision('COUNTER_OFFERED')}>
+                Counter Offer
+              </Button>
+              <Button variant="outline" size="md" style={{ borderColor: '#fca5a5', color: '#b91c1c' }} onClick={() => handleDecision('DECLINED')}>
+                Decline
+              </Button>
+            </div>
+          )}
         </div>
       </main>
     </div>

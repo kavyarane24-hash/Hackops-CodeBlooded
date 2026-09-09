@@ -19,9 +19,9 @@
   align-items: center;
   justify-content: center;
   padding: 1.75rem 1rem;
-  border: 2px dashed var(--border-color);
+  border: 2px dashed var(--light-border);
   border-radius: var(--radius-md);
-  background-color: var(--bg-main);
+  background-color: #fafafa;
   text-align: center;
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -68,7 +68,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.85rem 1rem;
-  background-color: var(--risk-low-bg);
+  background-color: #f0fdf4;
   border: 1px solid var(--risk-low-border);
   border-radius: var(--radius-md);
 }

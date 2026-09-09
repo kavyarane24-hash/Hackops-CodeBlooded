@@ -1,8 +1,8 @@
 /* Global Modern CSS Design System for TrustLens AI */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
 
-:root, [data-theme="light"] {
-  /* Color Palette - Light Theme */
+:root {
+  /* Color Palette - Vibrant Emerald & Deep Slate Theme */
   --primary-50: #ecfdf5;
   --primary-100: #d1fae5;
   --primary-500: #10b981;
@@ -12,21 +12,17 @@
   --accent-500: #6366f1;
   --accent-600: #4f46e5;
   
-  --bg-main: #f8fafc;
-  --bg-card: #ffffff;
-  --border-color: #e2e8f0;
-  --nav-hover-bg: #ecfdf5;
+  --dark-bg: #0f172a;
+  --dark-card: #1e293b;
+  --dark-border: #334155;
+  
+  --light-bg: #f8fafc;
+  --light-card: #ffffff;
+  --light-border: #e2e8f0;
   
   --text-main: #0f172a;
   --text-muted: #64748b;
   --text-light: #94a3b8;
-
-  --navbar-bg: rgba(255, 255, 255, 0.85);
-  --navbar-border: #e2e8f0;
-
-  --hero-bg: linear-gradient(180deg, #ecfdf5 0%, #f8fafc 100%);
-  --metrics-bg: #ffffff;
-  --cta-bg: linear-gradient(135deg, #0f172a, #1e1b4b);
 
   --risk-low-bg: #dcfce7;
   --risk-low-text: #15803d;
@@ -53,50 +49,6 @@
   --transition-normal: 0.25s ease;
 }
 
-[data-theme="dark"] {
-  /* Color Palette - Deep Dark Slate Theme */
-  --primary-50: rgba(16, 185, 129, 0.15);
-  --primary-100: rgba(16, 185, 129, 0.25);
-  --primary-500: #10b981;
-  --primary-600: #34d399;
-  --primary-700: #6ee7b7;
-
-  --accent-500: #818cf8;
-  --accent-600: #6366f1;
-  
-  --bg-main: #0b0f19;
-  --bg-card: #131b2e;
-  --border-color: #1e293b;
-  --nav-hover-bg: rgba(16, 185, 129, 0.15);
-  
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --text-light: #64748b;
-
-  --navbar-bg: rgba(11, 15, 25, 0.85);
-  --navbar-border: #1e293b;
-
-  --hero-bg: radial-gradient(circle at 50% 20%, rgba(16, 185, 129, 0.1), transparent 70%), linear-gradient(180deg, #0b0f19 0%, #0f172a 100%);
-  --metrics-bg: #131b2e;
-  --cta-bg: linear-gradient(135deg, #064e3b, #0f172a);
-
-  --risk-low-bg: rgba(21, 128, 61, 0.2);
-  --risk-low-text: #4ade80;
-  --risk-low-border: rgba(74, 222, 128, 0.3);
-
-  --risk-medium-bg: rgba(180, 83, 9, 0.2);
-  --risk-medium-text: #fbbf24;
-  --risk-medium-border: rgba(251, 191, 36, 0.3);
-
-  --risk-high-bg: rgba(190, 18, 60, 0.2);
-  --risk-high-text: #f87171;
-  --risk-high-border: rgba(248, 113, 113, 0.3);
-
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.6);
-}
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -105,11 +57,10 @@
 
 body {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  background-color: var(--bg-main);
+  background-color: var(--light-bg);
   color: var(--text-main);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -128,8 +79,6 @@ a {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-main);
-  color: var(--text-main);
 }
 
 .main-content {
@@ -146,18 +95,18 @@ a {
 .dashboard-main {
   flex: 1;
   padding: 2rem;
-  background-color: var(--bg-main);
+  background-color: #f1f5f9;
   overflow-y: auto;
 }
 
 /* Common Card Base Style */
 .card-base {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
+  background: var(--light-card);
+  border: 1px solid var(--light-border);
   border-radius: var(--radius-md);
   padding: 1.5rem;
   box-shadow: var(--shadow-sm);
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-normal), border-color var(--transition-normal);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .card-base:hover {
@@ -177,7 +126,7 @@ a {
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.4s ease forwards;
+  animation: fadeIn 0.4s ease forward;
 }
 
 /* Grid & Responsive Helpers */

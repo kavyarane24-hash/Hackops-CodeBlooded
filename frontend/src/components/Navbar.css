@@ -1,14 +1,11 @@
 /* Navbar Component Styles */
 .navbar-header {
-  background-color: var(--navbar-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--navbar-border);
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--light-border);
   position: sticky;
   top: 0;
   z-index: 100;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  transition: background-color var(--transition-normal), border-color var(--transition-normal);
 }
 
 .navbar-container {
@@ -35,7 +32,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
 
 .brand-text {
@@ -51,7 +47,7 @@
 }
 
 .brand-ai {
-  color: var(--primary-500);
+  color: var(--primary-600);
 }
 
 .brand-tagline {
@@ -75,56 +71,26 @@
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--text-muted);
-  padding: 0.45rem 0.85rem;
+  padding: 0.4rem 0.75rem;
   border-radius: var(--radius-sm);
   transition: all var(--transition-fast);
 }
 
 .nav-link:hover {
-  color: var(--primary-500);
-  background-color: var(--nav-hover-bg);
+  color: var(--primary-600);
+  background-color: var(--primary-50);
 }
 
 .nav-link.active {
-  color: var(--primary-500);
-  background-color: var(--nav-hover-bg);
+  color: var(--primary-600);
+  background-color: var(--primary-50);
   font-weight: 700;
 }
 
 .navbar-actions {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
-}
-
-.theme-toggle-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-full);
-  border: 1px solid var(--border-color);
-  background-color: var(--bg-card);
-  color: var(--text-main);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  box-shadow: var(--shadow-sm);
-}
-
-.theme-toggle-btn:hover {
-  border-color: var(--primary-500);
-  color: var(--primary-500);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
-}
-
-.theme-icon.moon {
-  color: #6366f1;
-}
-
-.theme-icon.sun {
-  color: #f59e0b;
+  gap: 1rem;
 }
 
 @media (max-width: 768px) {
