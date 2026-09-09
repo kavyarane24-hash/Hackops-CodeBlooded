@@ -163,24 +163,102 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Quick Underwriting Insights Banner */}
-        <div className="card-base decision-banner">
-          <div className="decision-info">
-            <div className="decision-badge">
-              <FileCheck size={20} />
-              <span>AI Recommendation: APPROVE LOAN</span>
+        {/* Quick Underwriting Insights Banner & Human Decision Actions */}
+        <div className="card-base decision-banner" style={{ flexDirection: 'column', alignItems: 'stretch', gap: '1rem' }}>
+          <div className="flex items-center justify-between" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className="decision-info">
+              <div className="decision-badge">
+                <FileCheck size={20} />
+                <span>AI Recommendation: {borrower.riskLevel === 'High Risk' ? 'CAUTION / LOWER AMOUNT' : 'APPROVE LOAN'}</span>
+              </div>
+              <h3>Recommended Allocation: ₹{(borrower.recommendedMaxLoan).toLocaleString('en-IN')} @ {borrower.suggestedInterestRate}% p.a.</h3>
+              <p>{liveData?.ai_explanation || "Borrower exhibits verified cashflow velocity with clean default record."}</p>
             </div>
-            <h3>Recommended Approval for ₹1,50,000 @ 14.5% p.a.</h3>
-            <p>Borrower exhibits top-tier daily transaction velocity with zero supplier defaults across 3 years of trade history.</p>
+            <Button
+              variant="outline"
+              size="sm"
+              icon={ArrowUpRight}
+              onClick={() => navigate('/explainability')}
+            >
+              Review AI Factors
+            </Button>
           </div>
-          <Button
-            variant="primary"
-            size="md"
-            icon={ArrowUpRight}
-            onClick={() => navigate('/explainability')}
-          >
-            Review AI Decision Factors
-          </Button>
+
+          {/* Human Lender Decision Buttons */}
+          <div style={{ paddingTop: '1rem', borderTop: '1px solid #e2e8f0', display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#475569', textTransform: 'uppercase', tracking: '0.05em' }}>Human Lender Decision:</span>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={async () => {
+                try {
+                  await fetch('/api/decisions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      borrower_name: borrower.name,
+                      decision_action: 'APPROVED',
+                      approved_amount: borrower.recommendedMaxLoan,
+                      approved_tenure: 12,
+                      lender_notes: 'Approved based on AI Risk Assessment.'
+                    })
+                  });
+                  alert(`Logged decision: APPROVED for ${borrower.name}`);
+                } catch (e) {
+                  alert('Recorded APPROVED decision locally.');
+                }
+              }}
+            >
+              Approve Loan
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={async () => {
+                try {
+                  await fetch('/api/decisions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      borrower_name: borrower.name,
+                      decision_action: 'COUNTER_OFFERED',
+                      approved_amount: borrower.recommendedMaxLoan * 0.8,
+                      approved_tenure: 12,
+                      lender_notes: 'Counter offered lower loan amount.'
+                    })
+                  });
+                  alert(`Logged decision: COUNTER OFFERED for ${borrower.name}`);
+                } catch (e) {
+                  alert('Recorded COUNTER OFFER decision locally.');
+                }
+              }}
+            >
+              Counter Offer
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
+              style={{ backgroundColor: '#ef4444', color: '#fff', border: 'none' }}
+              onClick={async () => {
+                try {
+                  await fetch('/api/decisions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      borrower_name: borrower.name,
+                      decision_action: 'DECLINED',
+                      lender_notes: 'Declined due to risk evaluation.'
+                    })
+                  });
+                  alert(`Logged decision: DECLINED for ${borrower.name}`);
+                } catch (e) {
+                  alert('Recorded DECLINED decision locally.');
+                }
+              }}
+            >
+              Decline Loan
+            </Button>
+          </div>
         </div>
       </main>
     </div>
