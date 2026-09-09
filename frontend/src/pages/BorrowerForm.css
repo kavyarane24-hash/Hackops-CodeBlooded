@@ -1,7 +1,7 @@
 /* BorrowerForm Page Styles */
 .borrower-form-page {
   padding: 2.5rem 1.5rem;
-  background-color: #f1f5f9;
+  background-color: var(--bg-main);
   min-height: calc(100vh - 70px);
 }
 
@@ -43,9 +43,9 @@
 }
 
 .success-banner {
-  background-color: #dcfce7;
-  border: 1px solid #86efac;
-  color: #15803d;
+  background-color: var(--risk-low-bg);
+  border: 1px solid var(--risk-low-border);
+  color: var(--risk-low-text);
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -56,16 +56,16 @@
 .success-banner h4 {
   font-size: 1.05rem;
   font-weight: 700;
-  color: #166534;
+  color: var(--risk-low-text);
 }
 
 .success-banner p {
   font-size: 0.88rem;
-  color: #15803d;
+  color: var(--risk-low-text);
 }
 
 .banner-icon {
-  color: #166534;
+  color: var(--risk-low-text);
   flex-shrink: 0;
 }
 
@@ -74,6 +74,8 @@
   flex-direction: column;
   gap: 2rem;
   padding: 2.25rem;
+  background-color: var(--bg-card);
+  border-color: var(--border-color);
 }
 
 .form-section {
@@ -81,7 +83,7 @@
   flex-direction: column;
   gap: 1.25rem;
   padding-bottom: 1.75rem;
-  border-bottom: 1px dashed var(--light-border);
+  border-bottom: 1px dashed var(--border-color);
 }
 
 .form-section:last-of-type {
@@ -95,7 +97,198 @@
   gap: 0.5rem;
   font-size: 1.15rem;
   font-weight: 700;
-  color: var(--primary-700);
+  color: var(--primary-500);
+}
+
+.section-heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.sample-scan-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  background-color: var(--primary-50);
+  color: var(--primary-500);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sample-scan-btn:hover {
+  background-color: var(--nav-hover-bg);
+  border-color: var(--primary-500);
+}
+
+.section-description {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-top: -0.5rem;
+  line-height: 1.4;
+}
+
+/* AI Document Scanning Animation */
+.scanning-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-main);
+  border: 1px solid var(--primary-500);
+  border-radius: 0.5rem;
+}
+
+.scanning-card h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.2rem;
+}
+
+.scanning-card p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.spinner-ring {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--primary-500);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(3600deg); }
+}
+
+/* Document Relevance Verification Result Card */
+.relevance-card {
+  background: var(--bg-card);
+  border: 1px solid var(--primary-500);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.08);
+}
+
+.relevance-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 0.75rem;
+}
+
+.relevance-title-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.text-emerald {
+  color: var(--primary-500);
+}
+
+.relevance-title {
+  font-weight: 700;
+  font-size: 1.02rem;
+  color: var(--text-main);
+}
+
+.relevance-score-tag {
+  background-color: var(--primary-50);
+  color: var(--primary-500);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid var(--primary-500);
+}
+
+.relevance-status-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.92rem;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+
+.relevance-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.relevance-bullets li {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+}
+
+.insights-extracted-box {
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 0.85rem;
+}
+
+.insights-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--accent-500);
+  margin-bottom: 0.5rem;
+}
+
+.insights-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.insight-pill {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 0.35rem 0.7rem;
+  border-radius: 0.375rem;
+  font-size: 0.82rem;
+  color: var(--text-main);
+}
+
+.autofill-confirm-text {
+  font-size: 0.8rem;
+  color: #047857;
+  font-weight: 600;
+}
+
+/* Auto-fill banner in Point 4 */
+.autofill-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 0.5rem;
+  color: #1e40af;
+  font-size: 0.86rem;
 }
 
 .doc-upload-box {
@@ -112,3 +305,4 @@
 .form-submit-row {
   margin-top: 1rem;
 }
+

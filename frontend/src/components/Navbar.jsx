@@ -1,14 +1,16 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { ShieldCheck, PlusCircle, LayoutDashboard, HelpCircle } from 'lucide-react';
+import { ShieldCheck, PlusCircle, LayoutDashboard, HelpCircle, Sun, Moon } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 import Button from './Button';
 import './Navbar.css';
 
 /**
- * Top Navbar component with brand logo, main page links, and quick apply CTA
+ * Top Navbar component with brand logo, main page links, theme toggle, and quick apply CTA
  */
 const Navbar = () => {
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <header className="navbar-header">
@@ -39,8 +41,21 @@ const Navbar = () => {
           </NavLink>
         </nav>
 
-        {/* CTA Actions */}
+        {/* CTA Actions & Theme Toggle */}
         <div className="navbar-actions">
+          <button
+            className="theme-toggle-btn"
+            onClick={toggleTheme}
+            title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} mode`}
+            aria-label="Toggle theme"
+          >
+            {theme === 'light' ? (
+              <Moon size={18} className="theme-icon moon" />
+            ) : (
+              <Sun size={18} className="theme-icon sun" />
+            )}
+          </button>
+
           <Button
             variant="primary"
             size="sm"

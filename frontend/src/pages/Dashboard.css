@@ -106,8 +106,8 @@
 
 /* Decision Banner */
 .decision-banner {
-  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-  border: 1px solid var(--primary-100);
+  background: var(--primary-50);
+  border: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
