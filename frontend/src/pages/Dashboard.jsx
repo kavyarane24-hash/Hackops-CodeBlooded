@@ -17,7 +17,19 @@ import './Dashboard.css';
  */
 const Dashboard = () => {
   const navigate = useNavigate();
-  const borrower = mockBorrowerData;
+
+  // Load live evaluation from backend API if available, else fallback to mock data
+  const storedEval = sessionStorage.getItem('currentEvaluation');
+  const liveData = storedEval ? JSON.parse(storedEval) : null;
+
+  const borrower = {
+    ...mockBorrowerData,
+    name: liveData?.borrower_name || mockBorrowerData.name,
+    trustScore: liveData ? Math.round(liveData.trust_score * 9) : mockBorrowerData.trustScore,
+    riskLevel: liveData ? (liveData.risk_level === 'LOW' ? 'Low Risk' : liveData.risk_level === 'MEDIUM' ? 'Medium Risk' : 'High Risk') : mockBorrowerData.riskLevel,
+    riskScorePercent: liveData ? Math.round(liveData.default_probability * 100) : mockBorrowerData.riskScorePercent,
+    recommendedMaxLoan: liveData ? liveData.recommended_amount : mockBorrowerData.recommendedMaxLoan,
+  };
 
   return (
     <div className="dashboard-layout">

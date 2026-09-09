@@ -13,6 +13,9 @@ import './Explainability.css';
  */
 const Explainability = () => {
   const navigate = useNavigate();
+  
+  const storedEval = sessionStorage.getItem('currentEvaluation');
+  const liveData = storedEval ? JSON.parse(storedEval) : null;
   const borrower = mockBorrowerData;
 
   const positiveFactors = borrower.factors.filter(f => f.impact === 'positive');
@@ -56,6 +59,21 @@ const Explainability = () => {
             </p>
           </div>
         </div>
+
+        {/* Live Generative AI Explanation Banner if Available */}
+        {liveData?.ai_explanation && (
+          <div className="card-base explain-intro-card" style={{ marginTop: '1rem', borderLeft: '4px solid #0284c7', background: 'linear-gradient(to right, #f0f9ff, #ffffff)' }}>
+            <div className="explain-icon-box" style={{ background: '#0284c7', color: '#ffffff' }}>
+              <BrainCircuit size={28} />
+            </div>
+            <div className="explain-intro-text">
+              <h3 style={{ color: '#0369a1' }}>Live Generative AI Decision Summary</h3>
+              <p style={{ fontStyle: 'italic', marginTop: '0.25rem', color: '#1e293b' }}>
+                "{liveData.ai_explanation}"
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Factors Breakdown Section (Positive vs. Negative Drivers) */}
         <div className="grid-2 factors-section">

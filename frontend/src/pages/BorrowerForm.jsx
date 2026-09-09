@@ -141,17 +141,43 @@ const BorrowerForm = () => {
   };
 
   // Form Submit Handler
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (validate()) {
-      // Print the single final JavaScript object to the browser console
       console.log('====================================');
       console.log('TrustLens AI Borrower Form Data Submitted:');
       console.log(formData);
       console.log('====================================');
 
       setSubmittedSuccess(true);
+
+      // Call backend REST API for live prediction
+      try {
+        const apiPayload = {
+          borrower_name: formData.fullName || "Ramesh Kumar",
+          income: parseFloat(formData.monthlyIncome || 50000) * 12,
+          employment_years: parseFloat(formData.employmentType === 'Salaried' ? 4 : 2),
+          loan_amount: parseFloat(formData.requestedLoanAmount || 150000),
+          loan_purpose: formData.loanPurpose || "PERSONAL",
+          credit_history_years: parseFloat(formData.previousLoans || 3),
+          previous_default: parseInt(formData.latePayments || 0) > 0,
+          person_age: parseInt(formData.age || 28)
+        };
+
+        const response = await fetch('http://localhost:8000/api/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(apiPayload)
+        });
+
+        if (response.ok) {
+          const evalResult = await response.json();
+          sessionStorage.setItem('currentEvaluation', JSON.stringify(evalResult));
+        }
+      } catch (err) {
+        console.warn("Backend API unavailable, using fallback:", err);
+      }
 
       // Smoothly navigate to AI Analysis Loading animation page
       setTimeout(() => {
