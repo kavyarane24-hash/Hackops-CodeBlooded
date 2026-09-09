@@ -1,0 +1,117 @@
+/* EvidenceCard Styles */
+.evidence-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.85rem;
+}
+
+.evidence-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.evidence-icon-wrapper {
+  background-color: var(--primary-50);
+  padding: 0.5rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.verified-icon {
+  color: var(--primary-600);
+}
+
+.pending-icon {
+  color: #d97706;
+}
+
+.evidence-title-info {
+  flex: 1;
+}
+
+.evidence-type {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+.evidence-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.25;
+}
+
+.evidence-status-pill {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.status-verified {
+  background-color: var(--risk-low-bg);
+  color: var(--risk-low-text);
+}
+
+.status-pending {
+  background-color: var(--risk-medium-bg);
+  color: var(--risk-medium-text);
+}
+
+.evidence-details {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.evidence-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--light-border);
+  padding-top: 0.75rem;
+  font-size: 0.78rem;
+}
+
+.confidence-meter {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.confidence-label {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.confidence-bar-bg {
+  width: 60px;
+  height: 6px;
+  background-color: #e2e8f0;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.confidence-bar-fill {
+  height: 100%;
+  background-color: var(--primary-500);
+  border-radius: var(--radius-full);
+}
+
+.confidence-val {
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.evidence-date {
+  color: var(--text-light);
+}
