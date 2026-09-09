@@ -68,11 +68,30 @@ class TrustLensPredictor:
             
         prev_def_str = 'Y' if prev_def_bool else 'N'
         
-        # Optional fields with intelligent fallbacks
-        age = int(borrower.get("person_age", max(21, int(emp_years + 20))))
-        home_ownership = str(borrower.get("person_home_ownership", self.defaults.get("default_home_ownership", "RENT"))).upper()
-        int_rate = float(borrower.get("loan_int_rate", self.defaults.get("default_int_rate", 11.0)))
-        loan_grade = str(borrower.get("loan_grade", "B")).upper()
+        # Optional fields with intelligent fallbacks (safely handles None passed from Optional Pydantic fields)
+        raw_age = borrower.get("person_age")
+        if raw_age is not None:
+            age = int(raw_age)
+        else:
+            age = max(21, int(emp_years + 20))
+            
+        raw_home = borrower.get("person_home_ownership")
+        if raw_home is not None:
+            home_ownership = str(raw_home).upper()
+        else:
+            home_ownership = str(self.defaults.get("default_home_ownership", "RENT")).upper()
+            
+        raw_int_rate = borrower.get("loan_int_rate")
+        if raw_int_rate is not None:
+            int_rate = float(raw_int_rate)
+        else:
+            int_rate = float(self.defaults.get("default_int_rate", 11.0))
+            
+        raw_grade = borrower.get("loan_grade")
+        if raw_grade is not None:
+            loan_grade = str(raw_grade).upper()
+        else:
+            loan_grade = "B"
         
         # Derived feature
         loan_percent_income = (loan_amt / income) if income > 0 else 1.0
