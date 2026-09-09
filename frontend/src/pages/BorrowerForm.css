@@ -1,0 +1,114 @@
+/* BorrowerForm Page Styles */
+.borrower-form-page {
+  padding: 2.5rem 1.5rem;
+  background-color: #f1f5f9;
+  min-height: calc(100vh - 70px);
+}
+
+.form-container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.form-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.form-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  background-color: var(--primary-50);
+  border: 1px solid var(--primary-100);
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary-700);
+  margin-bottom: 0.75rem;
+}
+
+.form-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.form-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.success-banner {
+  background-color: #dcfce7;
+  border: 1px solid #86efac;
+  color: #15803d;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+}
+
+.success-banner h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #166534;
+}
+
+.success-banner p {
+  font-size: 0.88rem;
+  color: #15803d;
+}
+
+.banner-icon {
+  color: #166534;
+  flex-shrink: 0;
+}
+
+.main-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2.25rem;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px dashed var(--light-border);
+}
+
+.form-section:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--primary-700);
+}
+
+.doc-upload-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.doc-error-msg {
+  font-size: 0.8rem;
+  color: #e11d48;
+  margin-top: -0.5rem;
+}
+
+.form-submit-row {
+  margin-top: 1rem;
+}

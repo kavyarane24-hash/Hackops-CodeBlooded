@@ -1,0 +1,153 @@
+/* AnalysisLoading Page Styles */
+.analysis-loading-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 70px);
+  background-color: #0f172a;
+  padding: 2rem 1.5rem;
+}
+
+.loading-card {
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  background-color: #1e293b;
+  border-color: #334155;
+  color: #ffffff;
+  padding: 3rem 2rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.ai-icon-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ai-pulse-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  background-color: rgba(16, 185, 129, 0.25);
+  animation: pulseGlow 1.8s infinite ease-out;
+}
+
+.ai-main-icon {
+  color: var(--primary-500);
+  z-index: 2;
+}
+
+.loading-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.loading-subtitle {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  margin-bottom: 2rem;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 8px;
+  background-color: #334155;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-500), #06b6d4);
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease;
+}
+
+.steps-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  text-align: left;
+}
+
+.step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  opacity: 0.4;
+  transition: opacity 0.3s ease;
+}
+
+.step-item.active {
+  opacity: 1;
+}
+
+.step-item.done {
+  opacity: 0.85;
+}
+
+.step-status-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.15rem;
+}
+
+.icon-success {
+  color: var(--primary-500);
+}
+
+.icon-spinning {
+  color: #38bdf8;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+.icon-bullet {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+  background-color: #475569;
+  margin: 5px;
+}
+
+.step-text-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.step-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.step-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #f8fafc;
+}
+
+.processing-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #38bdf8;
+  text-transform: uppercase;
+}
+
+.step-desc {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
