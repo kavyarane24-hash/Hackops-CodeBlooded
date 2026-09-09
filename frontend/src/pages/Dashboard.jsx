@@ -25,7 +25,8 @@ const Dashboard = () => {
   const borrower = {
     ...mockBorrowerData,
     name: liveData?.borrower_name || mockBorrowerData.name,
-    trustScore: liveData ? Math.round(liveData.trust_score * 9) : mockBorrowerData.trustScore,
+    trustScore: liveData ? liveData.trust_score : mockBorrowerData.trustScore,
+    maxTrustScore: liveData ? 100 : mockBorrowerData.maxTrustScore,
     riskLevel: liveData ? (liveData.risk_level === 'LOW' ? 'Low Risk' : liveData.risk_level === 'MEDIUM' ? 'Medium Risk' : 'High Risk') : mockBorrowerData.riskLevel,
     riskScorePercent: liveData ? Math.round(liveData.default_probability * 100) : mockBorrowerData.riskScorePercent,
     recommendedMaxLoan: liveData ? liveData.recommended_amount : mockBorrowerData.recommendedMaxLoan,
