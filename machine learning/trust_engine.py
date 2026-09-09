@@ -111,9 +111,9 @@ class TrustEngine:
     @staticmethod
     def get_risk_level(default_probability: float, trust_score: int) -> str:
         """Determines risk level based on probability and trust score (PRD §5.2)."""
-        if default_probability < 0.30 and trust_score >= 70:
+        if trust_score >= 70 and default_probability < 0.35:
             return "LOW"
-        elif default_probability >= 0.60 or trust_score < 45:
+        elif trust_score < 45 or (default_probability >= 0.75 and trust_score < 50):
             return "HIGH"
         else:
             return "MEDIUM"

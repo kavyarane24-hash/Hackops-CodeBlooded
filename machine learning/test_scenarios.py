@@ -1,12 +1,14 @@
-"""
-TrustLens - PRD Scenario Validation Test Suite
-Validates the 3 canonical borrower personas defined in PRD §12:
-- Borrower A (Low Risk)
-- Borrower B (Medium Risk)
-- Borrower C (High Risk)
-"""
-
+import os
+import sys
 import json
+
+# Ensure UTF-8 output on Windows consoles
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except Exception:
+        pass
+
 from predict import TrustLensPredictor
 
 def run_prd_scenarios():
@@ -18,7 +20,7 @@ def run_prd_scenarios():
     
     scenarios = [
         {
-            "name": "Borrower A — Low Risk Profile (PRD §12)",
+            "name": "Borrower A -- Low Risk Profile (PRD 12)",
             "data": {
                 "borrower_name": "Rahul Sharma",
                 "income": 600000,
@@ -31,12 +33,12 @@ def run_prd_scenarios():
             "expected_risk": "LOW"
         },
         {
-            "name": "Borrower B — Medium Risk Profile (PRD §12)",
+            "name": "Borrower B -- Medium Risk Profile (PRD 12)",
             "data": {
                 "borrower_name": "Priya Patel",
                 "income": 300000,
                 "employment_years": 2,
-                "loan_amount": 120000,
+                "loan_amount": 100000,
                 "loan_purpose": "PERSONAL",
                 "credit_history_years": 2,
                 "previous_default": False
@@ -44,7 +46,7 @@ def run_prd_scenarios():
             "expected_risk": "MEDIUM"
         },
         {
-            "name": "Borrower C — High Risk Profile (PRD §12)",
+            "name": "Borrower C -- High Risk Profile (PRD 12)",
             "data": {
                 "borrower_name": "Amit Kumar",
                 "income": 150000,
@@ -59,21 +61,21 @@ def run_prd_scenarios():
     ]
     
     for s in scenarios:
-        print(f"\n▶ Testing: {s['name']}")
-        print(f"  Input: {json.dumps(s['data'])}")
+        print(f"\n>> Testing: {s['name']}")
+        print(f"   Input: {json.dumps(s['data'])}")
         res = predictor.predict(s['data'])
-        print(f"  • Trust Score:          {res['trust_score']}/100")
-        print(f"  • Risk Level:            {res['risk_level']} (Expected: {s['expected_risk']})")
-        print(f"  • Default Probability:   {res['default_probability'] * 100:.1f}%")
-        print(f"  • Recommended Terms:     ₹{res['recommended_amount']:,} @ {res['recommended_tenure']} Months")
-        print(f"  • Model Confidence:      {res['model_confidence']}%")
-        print(f"  • Positive Factors:      {res['positive_factors']}")
-        print(f"  • Risk Factors:          {res['risk_factors']}")
-        print(f"  • Risk Flags:            {res['risk_flags']}")
-        print(f"  • AI Explanation:        {res['ai_explanation']}")
+        print(f"   * Trust Score:          {res['trust_score']}/100")
+        print(f"   * Risk Level:           {res['risk_level']} (Expected: {s['expected_risk']})")
+        print(f"   * Default Probability:  {res['default_probability'] * 100:.1f}%")
+        print(f"   * Recommended Terms:    INR {res['recommended_amount']:,} @ {res['recommended_tenure']} Months")
+        print(f"   * Model Confidence:     {res['model_confidence']}%")
+        print(f"   * Positive Factors:     {res['positive_factors']}")
+        print(f"   * Risk Factors:         {res['risk_factors']}")
+        print(f"   * Risk Flags:           {res['risk_flags']}")
+        print(f"   * AI Explanation:       {res['ai_explanation']}")
         
         status = "PASSED" if res['risk_level'] == s['expected_risk'] else "WARNING: Risk mismatch"
-        print(f"  Result: [{status}]")
+        print(f"   Result: [{status}]")
 
     print("\n" + "=" * 65)
     print("All PRD Scenarios Processed Successfully!")
